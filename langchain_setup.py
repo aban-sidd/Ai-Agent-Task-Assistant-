@@ -5,6 +5,7 @@ from transformers import pipeline
 from pydantic import BaseModel
 from langchain.agents import initialize_agent , AgentType , Tool , create_openai_functions_agent , AgentExecutor
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_openai import ChatOpenAI
 from langchain_groq import ChatGroq
 from langchain.memory import ConversationBufferMemory
 
@@ -168,11 +169,21 @@ def translate_to(text: str, language: str = "spanish") -> str:
     return result[0]["translation_text"]
 
 # Initialize the chat model
-llm = ChatGroq(
-    temperature=0,
-    model_name="LLaMA3-8b-8192",
-    groq_api_key="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"  # ⚠️ avoid this in production
-)
+def load_llm(model_choice: str, api_key: str):
+    if model_choice == "Groq":
+        return ChatGroq(
+            model_name="LLaMA3-8b-8192",
+            groq_api_key=api_key,
+            temperature=0.3
+        )
+    elif model_choice == "OpenAI":
+        return ChatOpenAI(
+            model="gpt-4o",
+            api_key=api_key,
+            temperature=0.3
+        )
+    else:
+        raise ValueError("Invalid model choice")
 
 
 tools = [
@@ -192,16 +203,16 @@ prompt = ChatPromptTemplate.from_messages([
     MessagesPlaceholder(variable_name="agent_scratchpad"),
 ])
 # Create the agent with the prompt
-agent_chain = create_openai_functions_agent(
-    llm=llm,
-    tools=tools,
-    prompt=prompt
-)
-
-# Plug in the memory here
-agent_executor = AgentExecutor(
-    agent=agent_chain,
-    tools=tools,
-    memory=memory,
-    return_only_outputs=True,
-)
+def build_agent_executor(model_choice: str, api_key: str):
+    llm = load_llm(model_choice, api_key)
+    agent_chain = create_openai_functions_agent(
+        llm=llm,
+        tools=tools,
+        prompt=prompt
+    )
+    return AgentExecutor(
+        agent=agent_chain,
+        tools=tools,
+        memory=memory,
+        return_only_outputs=True,
+    )
