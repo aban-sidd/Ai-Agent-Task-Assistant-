@@ -8,15 +8,13 @@ from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_community.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 
-from dotenv import load_dotenv
-import os
 import streamlit as st
 
-load_dotenv()
 
 try:
-    TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    # ✅ Pull from Streamlit Cloud Secrets
+    TAVILY_API_KEY = st.secrets["TAVILY_API_KEY"]
+    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 
     if not TAVILY_API_KEY or not isinstance(TAVILY_API_KEY, str):
         raise ValueError("❌ TAVILY_API_KEY is missing or invalid.")

@@ -14,16 +14,6 @@ with st.sidebar:
 # Main chat area
 st.title("🗣️ AI Task Assistant")
 
-try:
-    from langchain_setup import agent_executor
-except Exception as e:
-    st.error(f"🔥 App failed to load LangChain agent: {e}")
-    st.stop()
-
-# If it loads, you're good to go
-st.success("✅ App initialized successfully.")
-
-
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
