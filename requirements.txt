@@ -1,0 +1,9 @@
+openai
+langchain
+tavily-python
+transformers
+torch
+streamlit
+pydantic
+langchain-openai
+langchain_community
