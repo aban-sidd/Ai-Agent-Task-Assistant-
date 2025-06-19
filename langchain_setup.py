@@ -17,16 +17,16 @@ load_dotenv()
 try:
     TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+    if not TAVILY_API_KEY or not isinstance(TAVILY_API_KEY, str):
+        raise ValueError("❌ TAVILY_API_KEY is missing or invalid.")
+
+    if not OPENAI_API_KEY or not isinstance(OPENAI_API_KEY, str):
+        raise ValueError("❌ OPENAI_API_KEY is missing or invalid.")
+
 except Exception as e:
-    raise RuntimeError(f"🔐 Failed to load secrets: {e}")
-
-
-
-if not TAVILY_API_KEY or not isinstance(TAVILY_API_KEY, str):
-    raise EnvironmentError("❌ TAVILY_API_KEY is missing or not a string.")
-
-if not OPENAI_API_KEY or not isinstance(OPENAI_API_KEY, str):
-    raise EnvironmentError("❌ OPENAI_API_KEY is missing or not a string.")
+    st.error(f"🔐 Failed to load secrets: {e}")
+    st.stop()
 
 ## Web-search Tool
 
