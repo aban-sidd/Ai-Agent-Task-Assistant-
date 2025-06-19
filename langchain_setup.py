@@ -15,8 +15,8 @@ import streamlit as st
 load_dotenv()
 
 try:
-    TAVILY_API_KEY = st.secrets["TAVILY_API_KEY"]
-    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+    TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 except Exception as e:
     raise RuntimeError(f"🔐 Failed to load secrets: {e}")
 
