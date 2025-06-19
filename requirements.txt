@@ -7,3 +7,4 @@ streamlit
 pydantic
 langchain-openai
 langchain_community
+python-dotenv

@@ -14,8 +14,12 @@ import streamlit as st
 
 load_dotenv()
 
-TAVILY_API_KEY = st.secrets["TAVILY_API_KEY"]
-OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+try:
+    TAVILY_API_KEY = st.secrets["TAVILY_API_KEY"]
+    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+except Exception as e:
+    raise RuntimeError(f"🔐 Failed to load secrets: {e}")
+
 
 
 if not TAVILY_API_KEY or not isinstance(TAVILY_API_KEY, str):
@@ -26,7 +30,13 @@ if not OPENAI_API_KEY or not isinstance(OPENAI_API_KEY, str):
 
 ## Web-search Tool
 
+print("✅ Loaded secrets")
+print("✅ Creating Tavily client...")
+
 client = TavilyClient(api_key=TAVILY_API_KEY)
+
+print("✅ Tavily client ready")
+print("✅ Initializing tools...")
 
 @tool
 def web_search(query: str) -> str:
