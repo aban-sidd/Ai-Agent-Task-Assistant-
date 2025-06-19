@@ -8,9 +8,21 @@ from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_community.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+if not os.getenv("TAVILY_API_KEY"):
+    raise EnvironmentError("❌ Tavily API key not set! Please set TAVILY_API_KEY in your .env file.")
+
+if not os.getenv("OPENAI_API_KEY"):
+    raise EnvironmentError("❌ OpenAI API key not set! Please set OPENAI_API_KEY in your .env file.")
+
+
 ## Web-search Tool
 
-client = TavilyClient()
+client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"), timeout=10)
 
 @tool
 def web_search(query: str) -> str:
@@ -163,7 +175,7 @@ def translate_to(text: str, language: str = "spanish") -> str:
 
 # Initialize the chat model
 
-llm = ChatOpenAI(temperature=0 , model='gpt-3.5-turbo')
+llm = ChatOpenAI(temperature=0 , model='gpt-3.5-turbo' , openai_api_key=os.getenv("OPENAI_API_KEY"))
 
 tools = [
     web_search,
