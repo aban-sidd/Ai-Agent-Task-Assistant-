@@ -14,8 +14,9 @@ import streamlit as st
 
 load_dotenv()
 
-TAVILY_API_KEY = str(st.secrets["TAVILY_API_KEY"]) if "TAVILY_API_KEY" in st.secrets else os.getenv("TAVILY_API_KEY")
-OPENAI_API_KEY = str(st.secrets["OPENAI_API_KEY"]) if "OPENAI_API_KEY" in st.secrets else os.getenv("OPENAI_API_KEY")
+TAVILY_API_KEY = st.secrets["TAVILY_API_KEY"]
+OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+
 
 if not TAVILY_API_KEY or not isinstance(TAVILY_API_KEY, str):
     raise EnvironmentError("❌ TAVILY_API_KEY is missing or not a string.")
