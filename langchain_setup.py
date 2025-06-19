@@ -10,8 +10,12 @@ from langchain.memory import ConversationBufferMemory
 
 from dotenv import load_dotenv
 import os
+import streamlit as st
 
 load_dotenv()
+
+TAVILY_API_KEY = st.secrets.get("TAVILY_API_KEY", os.getenv("TAVILY_API_KEY"))
+OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY"))
 
 if not os.getenv("TAVILY_API_KEY"):
     raise EnvironmentError("❌ Tavily API key not set! Please set TAVILY_API_KEY in your .env file.")
@@ -22,7 +26,7 @@ if not os.getenv("OPENAI_API_KEY"):
 
 ## Web-search Tool
 
-client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"), timeout=10)
+client = TavilyClient(api_key=TAVILY_API_KEY, timeout=10)
 
 @tool
 def web_search(query: str) -> str:
@@ -175,7 +179,7 @@ def translate_to(text: str, language: str = "spanish") -> str:
 
 # Initialize the chat model
 
-llm = ChatOpenAI(temperature=0 , model='gpt-3.5-turbo' , openai_api_key=os.getenv("OPENAI_API_KEY"))
+llm = ChatOpenAI(temperature=0 , model='gpt-3.5-turbo' , openai_api_key=OPENAI_API_KEY)
 
 tools = [
     web_search,
