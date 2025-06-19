@@ -5,33 +5,15 @@ from transformers import pipeline
 from pydantic import BaseModel
 from langchain.agents import initialize_agent , AgentType , Tool , create_openai_functions_agent , AgentExecutor
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_community.chat_models import ChatOpenAI
+from langchain_groq import ChatGroq
 from langchain.memory import ConversationBufferMemory
-
-import streamlit as st
-
-
-try:
-    # ✅ Pull from Streamlit Cloud Secrets
-    TAVILY_API_KEY = st.secrets["TAVILY_API_KEY"]
-    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-
-    if not TAVILY_API_KEY or not isinstance(TAVILY_API_KEY, str):
-        raise ValueError("❌ TAVILY_API_KEY is missing or invalid.")
-
-    if not OPENAI_API_KEY or not isinstance(OPENAI_API_KEY, str):
-        raise ValueError("❌ OPENAI_API_KEY is missing or invalid.")
-
-except Exception as e:
-    st.error(f"🔐 Failed to load secrets: {e}")
-    st.stop()
 
 ## Web-search Tool
 
 print("✅ Loaded secrets")
 print("✅ Creating Tavily client...")
 
-client = TavilyClient(api_key=TAVILY_API_KEY)
+client = TavilyClient(api_key="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")
 
 print("✅ Tavily client ready")
 print("✅ Initializing tools...")
@@ -186,8 +168,12 @@ def translate_to(text: str, language: str = "spanish") -> str:
     return result[0]["translation_text"]
 
 # Initialize the chat model
+llm = ChatGroq(
+    temperature=0,
+    model_name="LLaMA3-8b-8192",
+    groq_api_key="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"  # ⚠️ avoid this in production
+)
 
-llm = ChatOpenAI(temperature=0 , model='gpt-3.5-turbo' , openai_api_key=OPENAI_API_KEY)
 
 tools = [
     web_search,
