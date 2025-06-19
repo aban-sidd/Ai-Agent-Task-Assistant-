@@ -14,19 +14,18 @@ import streamlit as st
 
 load_dotenv()
 
-TAVILY_API_KEY = st.secrets.get("TAVILY_API_KEY") or os.getenv("TAVILY_API_KEY")
-OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY")
+TAVILY_API_KEY = str(st.secrets["TAVILY_API_KEY"]) if "TAVILY_API_KEY" in st.secrets else os.getenv("TAVILY_API_KEY")
+OPENAI_API_KEY = str(st.secrets["OPENAI_API_KEY"]) if "OPENAI_API_KEY" in st.secrets else os.getenv("OPENAI_API_KEY")
 
-if not TAVILY_API_KEY:
-    raise EnvironmentError("❌ Tavily API key not set! Add it in Streamlit Secrets or .env")
+if not TAVILY_API_KEY or not isinstance(TAVILY_API_KEY, str):
+    raise EnvironmentError("❌ TAVILY_API_KEY is missing or not a string.")
 
-if not OPENAI_API_KEY:
-    raise EnvironmentError("❌ OpenAI API key not set! Add it in Streamlit Secrets or .env")
-
+if not OPENAI_API_KEY or not isinstance(OPENAI_API_KEY, str):
+    raise EnvironmentError("❌ OPENAI_API_KEY is missing or not a string.")
 
 ## Web-search Tool
 
-client = TavilyClient(api_key=TAVILY_API_KEY, timeout=10)
+client = TavilyClient(api_key=TAVILY_API_KEY)
 
 @tool
 def web_search(query: str) -> str:
